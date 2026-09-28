@@ -3,7 +3,7 @@
 <div align="center">
   <img src="https://res.cloudinary.com/ecommerce2021/image/upload/v1768626951/dev_efjbzw.jpg" alt="Code Web Khong Kho" width="120" style="border-radius: 50%"/>
 
-  <h3>Production-ready AI Agent configuration for Claude Code</h3>
+  <h3>Production-ready AI Agent configuration for Claude Code and Codex</h3>
   <p>Structured workflows, specialized agents, mandatory rules, and best practices</p>
 
   ![Version](https://img.shields.io/badge/version-1.2.0-blue?style=flat-square)
@@ -18,17 +18,20 @@
 
 ## Overview
 
-This repository provides a **production-grade configuration** for Claude Code AI agents. It includes:
+This repository provides structured AI development workflows for **Claude Code and Codex**. It includes:
 
 - **Structured development workflow** (Spec → Plan → Build → Test → Review → Ship)
 - **10 specialized agents** for different development roles
-- **13 mandatory rules** covering code quality, architecture, and operations
-- **8 slash commands** for common workflows
+- **13 coding rules** covering code quality, architecture, and operations
+- **9 workflow commands** for common development tasks
+- **13 Codex skills** and **10 project-scoped Codex agents**
 - **4 reference checklists** for security, testing, performance, and accessibility
 
 ---
 
-## Development Workflow
+## Claude Code Workflow
+
+Use slash commands in Claude Code. Codex provides the same workflows as skills, invoked with `$skill-name`.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -61,11 +64,28 @@ This repository provides a **production-grade configuration** for Claude Code AI
 
 ## Project Structure
 
+### Codex
+
+```
+.agents/                         # Codex skills and reference material
+├── skills/                      # 13 reusable workflows
+└── references/
+    ├── rules/                   # 13 portable coding rules
+    └── checklists/              # 4 portable checklists
+
+.codex/
+└── agents/                      # 10 Codex subagents (*.toml)
+
+AGENTS.md                       # Codex project instructions
+```
+
+### Claude Code
+
 ```
 .claude/
 ├── CLAUDE.md                    # Main AI configuration
 │
-├── commands/                    # Slash commands (8 total)
+├── commands/                    # Slash commands (9 total)
 │   ├── spec.md                  # /spec — PRD creation
 │   ├── plan.md                  # /plan — Task breakdown
 │   ├── build.md                 # /build — Incremental implementation
@@ -103,7 +123,7 @@ This repository provides a **production-grade configuration** for Claude Code AI
 │   ├── testing.md               # Test standards
 │   └── git-workflow.md          # Git conventions
 │
-├── skills/                      # Advanced skills
+├── skills/                      # Advanced skills (5 total)
 │   ├── tdd/SKILL.md             # Test-Driven Development
 │   ├── code-review/SKILL.md     # Five-axis review
 │   ├── incremental-implementation/SKILL.md
@@ -118,6 +138,8 @@ This repository provides a **production-grade configuration** for Claude Code AI
 │
 └── settings.json                # Project settings
 ```
+
+The files under `.agents/references/` are Codex-ready copies of `.claude/rules/` and `.claude/references/`. Keep corresponding files in sync when updating the shared guidance.
 
 ---
 
@@ -150,7 +172,9 @@ This repository provides a **production-grade configuration** for Claude Code AI
 
 ---
 
-## Approved Tech Stack
+## Recommended Tech Stack
+
+Use these choices as defaults for new projects. An existing repository's documented stack and the user's requirements take priority.
 
 | Layer | Technology |
 |-------|-----------|
@@ -173,7 +197,7 @@ This repository provides a **production-grade configuration** for Claude Code AI
 
 ## Mandatory Rules
 
-All 13 rules in `.claude/rules/` must be followed:
+The 13 rules are available in `.claude/rules/` for Claude Code and in `.agents/references/rules/` for Codex. Treat the stack and architecture examples as defaults to adapt to the target project's existing instructions and technology choices.
 
 ### Code Quality
 - **clean-code.md** — Variables, functions, SOLID, async/await
@@ -205,8 +229,13 @@ All 13 rules in `.claude/rules/` must be followed:
 git clone <repo-url>
 cd ai-agent
 
-# Copy to your project
+# Claude Code
 cp -r .claude/ /path/to/your/project/
+
+# Codex
+cp AGENTS.md /path/to/your/project/
+cp -r .agents/ /path/to/your/project/
+cp -r .codex/ /path/to/your/project/
 
 # Or use as template
 ```
@@ -222,6 +251,10 @@ cp -r .claude/ /path/to/your/project/
 /review
 /deploy
 ```
+
+In Codex, invoke the corresponding skill with `$spec`, `$plan`, `$build`, `$test`, `$review`, `$deploy`, `$debug`, `$simplify`, or `$fix-issue`. The additional skills are `$tdd`, `$code-review`, `$incremental-implementation`, and `$security-review`. Type `$` to browse available skills. Codex also has built-in `/plan` and `/review` commands.
+
+Codex loads project guidance from `AGENTS.md`, skills from `.agents/skills/`, and custom subagents from `.codex/agents/`. The Codex agent files use these IDs: `frontend_developer`, `backend_developer`, `systems_architect`, `code_reviewer`, `test_engineer`, `security_auditor`, `qa_engineer`, `project_manager`, `ui_ux_designer`, and `copywriter_seo`. Codex project agents and project-scoped configuration require the repository to be trusted. See the [Codex AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [skills guide](https://learn.chatgpt.com/docs/build-skills), and [subagents guide](https://learn.chatgpt.com/docs/agent-configuration/subagents).
 
 ### Using Agents
 
@@ -271,9 +304,9 @@ Build features end-to-end, not layer-by-layer:
 ## Security
 
 **Never commit:**
-- `.env` files
+- Runtime environment files such as `.env` or `.env.production` (keep `.env.example` free of real secrets)
 - API keys, secrets, passwords
-- `.claude/settings.local.json`
+- `.claude/settings.local.json` and `.claude/CLAUDE.local.md`
 
 **Always:**
 - Use environment variables
@@ -285,9 +318,9 @@ Build features end-to-end, not layer-by-layer:
 
 ## Contributing
 
-1. Follow the development workflow (`/spec` → `/plan` → `/build`)
+1. Follow the development workflow (`/spec` → `/plan` → `/build` in Claude Code, or `$spec` → `$plan` → `$build` in Codex)
 2. Ensure all tests pass
-3. Run `/review` before submitting PR
+3. Run `/review` in Claude Code; in Codex, use the built-in `/review` or the project `$review` skill
 4. Follow conventional commit format
 
 ---

@@ -1,10 +1,9 @@
 # Git ignore rules
 
-# Environment
+# Environment files (keep the committed example template)
 .env
-.env.local
-.env.*.local
-.env.production
+.env.*
+!.env.example
 
 # Claude local settings
 .claude/settings.local.json
